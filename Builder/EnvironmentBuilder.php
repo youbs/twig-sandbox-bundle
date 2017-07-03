@@ -5,7 +5,7 @@ namespace Intaro\TwigSandboxBundle\Builder;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
-use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicy;
+use Twig\Sandbox\SecurityPolicy;
 use Intaro\TwigSandboxBundle\SecurityPolicy\SecurityPolicyRules;
 
 /**
@@ -66,7 +66,7 @@ class EnvironmentBuilder implements WarmableInterface
      */
     public function getSandboxEnvironment($params = array(), SecurityPolicy $securityPolicy = null)
     {
-        $loader = new \Twig_Loader_String();
+        $loader = new \Twig_Loader_Array();
         $twig = new \Twig_Environment($loader, $params);
 
         if (!$securityPolicy) {
@@ -153,7 +153,7 @@ class EnvironmentBuilder implements WarmableInterface
             $cache->write($dumper->dump($rules), $rules->getResources());
         }
 
-        $this->rules = include $cache;
+        $this->rules = include $cache->getPath();
 
         return $this->rules;
     }
